@@ -1,0 +1,4 @@
+en:
+  faker:
+    online_gaming:
+      region: ['EU', 'AMER', 'ME', 'ASIA', 'OCE']

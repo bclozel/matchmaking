@@ -1,0 +1,6 @@
+services:
+  grafana:
+    image: 'grafana/otel-lgtm:0.11.10'
+    ports:
+      - '3000:3000' # UI, credentials: admin / admin
+      - '4318:4318' # OTel collector HTTP port

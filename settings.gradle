@@ -8,4 +8,5 @@ pluginManagement {
 
 rootProject.name = "demo-matchmaking"
 
+include "matchmaking"
 include "playerprofile"

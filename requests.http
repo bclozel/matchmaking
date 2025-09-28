@@ -1,0 +1,12 @@
+### Queue a player
+POST http://localhost:8080/api/queue
+Content-Type: application/json
+
+{
+  "playerId": "{{$random.uuid}}"
+}
+
+
+### Get current lobbies
+GET http://localhost:8080/api/lobbies
+

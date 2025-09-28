@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Matchmaking</title>
+    <link href="/css/nes.min.css" rel="stylesheet"/>
+    <link href="/css/style.css" rel="stylesheet"/>
+</head>
+<body>
+<header>
+    <nav>
+        <a href="#"><h1><i class="snes-jp-logo logo"></i>Spring Matchmaking</h1></a>
+        <p>Online gaming matchmaking dashboard.</p>
+    </nav>
+</header>
+<main id="dashboard">
+    <div id="queue">
+        <h2><a href="#queue">#</a>Queuing</h2>
+        <p>Queuing: {{queueSize}} players</p>
+    <div id="lobbies">
+        <h2><a href="#lobbies">#</a>Lobbies</h2>
+        {{#lobbies}}
+            <div class="nes-container with-title lobby">
+                <p class="title">{{uuid}} ({{region.label}})</p>
+                {{#teams}}
+                <div class="lists">
+                  <ul class="nes-list is-disc">
+                    {{#players}}
+                        <li><span class="nes-text is-primary">{{gamerTag}}</span> [<i class="nes-icon trophy is-small"></i>{{rank.level}}] ({{ping}}ms)</li>
+                    {{/players}}
+                  </ul>
+                </div>
+                {{/teams}}
+            </div>
+        {{/lobbies}}
+    </div>
+    <button type="button" id="scrolltop" class="nes-btn is-error scroll-btn active">
+        <span>&lt;</span>
+    </button>
+</main>
+</body>
+<script>
+    document.getElementById("scrolltop").addEventListener('click', function() {
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    })
+</script>
+</html>

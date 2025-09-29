@@ -40,10 +40,19 @@ tasks.named('test') {
 }
 
 tasks.withType(JavaCompile).configureEach {
+	options.compilerArgs += "--enable-preview"
 	options.errorprone {
 		disableAllChecks = true
 		option("NullAway:OnlyNullMarked", "true")
 		option("NullAway:JSpecifyMode", "true")
 		error("NullAway")
 	}
+}
+
+tasks.withType(Test).configureEach {
+	jvmArgs += "--enable-preview"
+}
+
+tasks.withType(JavaExec).configureEach {
+	jvmArgs += '--enable-preview'
 }

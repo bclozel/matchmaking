@@ -10,3 +10,12 @@ Content-Type: application/json
 ### Get current lobbies
 GET http://localhost:8080/api/lobbies
 
+
+### Get queue stats
+GET http://localhost:8080/api/queue/stats
+
+
+### Get queue stats with v1.0
+GET http://localhost:8080/api/queue/stats
+API-Version: 1.0
+

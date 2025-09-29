@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/api", produces = MediaType.APPLICATION_JSON_VALUE, version = "1.0+")
 class ApiController {
 
 	private final PlayerRegistrar playerRegistrar;
@@ -33,12 +33,20 @@ class ApiController {
 		return ResponseEntity.noContent().build();
 	}
 
+	@GetMapping(path = "/queue/stats", version = "1.1")
+	public QueueStats queueStats() {
+		return new QueueStats(this.playerRegistrar.getQueueSize());
+	}
+
 	@GetMapping("/lobbies")
 	public List<Lobby> lobbies() {
 		return this.lobbies.getLobbies();
 	}
 
 	record QueueRequest(String playerId) {
+	}
+
+	record QueueStats(long size) {
 	}
 
 }

@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.client.RestTestClient;
+import org.springframework.web.client.ApiVersionInserter;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -52,6 +54,28 @@ public class ApiControllerTests {
 					jsonPath("$[:1].uuid").value(uuid.toString()),
 					jsonPath("$[:1].region").value(PlayerRegion.EU.name()), jsonPath("$[:1].teams.length()").value(2));
 
+	}
+
+	@Test
+	void queueStatsAvailableByDefault() {
+		Mockito.when(playerRegistrar.getQueueSize()).thenReturn(42L);
+		RestTestClient restTestClient = RestTestClient.bindTo(this.mockMvc).build();
+		restTestClient.get()
+			.uri("/api/queue/stats")
+			.exchange()
+			.expectStatus()
+			.isOk()
+			.expectHeader()
+			.contentType("application/json")
+			.expectBody()
+			.json("{\"size\":42}");
+	}
+
+	@Test
+	void queueStatsNotAvailableIn10() {
+		ApiVersionInserter versionInserter = ApiVersionInserter.builder().useHeader("API-Version").build();
+		RestTestClient restTestClient = RestTestClient.bindTo(this.mockMvc).apiVersionInserter(versionInserter).build();
+		restTestClient.get().uri("/api/queue/stats").apiVersion("1.0").exchange().expectStatus().isNotFound();
 	}
 
 }

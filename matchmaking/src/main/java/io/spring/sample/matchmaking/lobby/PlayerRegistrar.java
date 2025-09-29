@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.StructuredTaskScope;
+import java.util.concurrent.StructuredTaskScope.Subtask;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.spring.sample.matchmaking.team.PlayerRegion;
@@ -44,12 +46,15 @@ public class PlayerRegistrar implements ApplicationEventPublisherAware {
 		this.eventPublisher = applicationEventPublisher;
 	}
 
-	public void queuePlayer(String playerId) {
-		PlayerProfile profile = this.playerApiClient.getPlayerProfile(playerId);
-		PlayerStats stats = this.playerApiClient.getchPlayerStats(playerId);
-		TeamMember teamMember = createTeamMember(profile, stats);
-		this.matchMakingQueue.addLast(teamMember);
-		attemptLobbyCreation();
+	public void queuePlayer(String playerId) throws InterruptedException {
+		try (var scope = StructuredTaskScope.open()) {
+			Subtask<PlayerProfile> playerTask = scope.fork(() -> this.playerApiClient.getPlayerProfile(playerId));
+			Subtask<PlayerStats> statsTask = scope.fork(() -> this.playerApiClient.getchPlayerStats(playerId));
+			scope.join();
+			TeamMember teamMember = createTeamMember(playerTask.get(), statsTask.get());
+			this.matchMakingQueue.addLast(teamMember);
+			attemptLobbyCreation();
+		}
 	}
 
 	private TeamMember createTeamMember(PlayerProfile profile, PlayerStats stats) {

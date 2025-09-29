@@ -32,6 +32,7 @@ public class PlayerRegistrar implements ApplicationEventPublisherAware {
 
 	private final int teamSize;
 
+	@SuppressWarnings("NullAway.Init")
 	private ApplicationEventPublisher eventPublisher;
 
 	PlayerRegistrar(PlayerApiClient playerApiClient, LobbyProperties properties) {

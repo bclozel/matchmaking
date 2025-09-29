@@ -2,6 +2,7 @@ package io.spring.sample.matchmaking.lobby;
 
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 import org.springframework.web.client.RestClient;
 
 @Component
@@ -17,19 +18,23 @@ class PlayerApiClient {
 	}
 
 	PlayerProfile getPlayerProfile(String playerId) {
-		return playerProfileClient.get()
+		PlayerProfile profile = playerProfileClient.get()
 			.uri("/profile/{playerId}", playerId)
 			.accept(MediaType.APPLICATION_JSON)
 			.retrieve()
 			.body(PlayerProfile.class);
+		Assert.state(profile != null, "Player profile should not be null");
+		return profile;
 	}
 
 	PlayerStats fetchPlayerStats(String playerId) {
-		return playerStatsClient.get()
+		PlayerStats stats = playerStatsClient.get()
 			.uri("/stats/{playerId}", playerId)
 			.accept(MediaType.APPLICATION_JSON)
 			.retrieve()
 			.body(PlayerStats.class);
+		Assert.notNull(stats, "Player stats should not be null");
+		return stats;
 	}
 
 }

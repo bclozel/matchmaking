@@ -19,3 +19,9 @@ GET http://localhost:8080/api/queue/stats
 GET http://localhost:8080/api/queue/stats
 API-Version: 1.0
 
+
+### Simulate backend failures
+POST http://localhost:8081/admin/failureRate
+Content-Type: application/json
+
+{ "rate" :  "0.2"}

@@ -8,13 +8,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.boot.restclient.test.autoconfigure.RestClientTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.http.HttpHeadersAssert;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.client.RequestMatcher;
+import org.springframework.web.client.RestClient;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
@@ -25,8 +25,11 @@ class PlayerApiClientTests {
 
 	private final PlayerApiClient client;
 
-	PlayerApiClientTests(@Autowired RestTemplateBuilder clientBuilder) {
+	private final MockRestServiceServer server;
+
+	PlayerApiClientTests(@Autowired RestClient.Builder clientBuilder, @Autowired MockRestServiceServer server) {
 		this.client = new PlayerApiClient(clientBuilder, new LobbyProperties());
+		this.server = server;
 	}
 
 	@Test
@@ -40,7 +43,6 @@ class PlayerApiClientTests {
 				  "ping": 20
 				}
 				""";
-		MockRestServiceServer server = MockRestServiceServer.bindTo(client.playerProfileClient).build();
 		server.expect(prepareRequest("/players/profile/az-123"))
 			.andRespond(withSuccess(profile, MediaType.APPLICATION_JSON));
 		assertThat(client.getPlayerProfile("az-123"))
@@ -59,7 +61,6 @@ class PlayerApiClientTests {
 				  }
 				}
 				""";
-		MockRestServiceServer server = MockRestServiceServer.bindTo(client.playerStatsClient).build();
 		server.expect(prepareRequest("/players/stats/az-123"))
 			.andRespond(withSuccess(profile, MediaType.APPLICATION_JSON));
 		assertThat(client.fetchPlayerStats("az-123")).isEqualTo(

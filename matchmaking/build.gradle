@@ -3,6 +3,7 @@ plugins {
 	id 'org.springframework.boot' version '4.0.0'
 	id 'io.spring.dependency-management' version '1.1.7'
 	id "io.spring.javaformat" version "0.0.47"
+	id 'net.ltgt.errorprone' version '4.3.0'
 }
 
 group = 'io.spring.sample'
@@ -21,6 +22,9 @@ repositories {
 dependencies {
 	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
+	errorprone("com.google.errorprone:error_prone_core:2.42.0")
+	errorprone("com.uber.nullaway:nullaway:0.12.12")
+
 	implementation 'org.springframework.boot:spring-boot-starter-mustache'
 	implementation 'org.springframework.boot:spring-boot-starter-restclient'
 	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
@@ -32,4 +36,13 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile).configureEach {
+	options.errorprone {
+		disableAllChecks = true
+		option("NullAway:OnlyNullMarked", "true")
+		option("NullAway:JSpecifyMode", "true")
+		error("NullAway")
+	}
 }

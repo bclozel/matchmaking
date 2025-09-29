@@ -1,7 +1,6 @@
 package io.spring.sample.matchmaking.lobby;
 
 import java.time.Instant;
-import java.util.List;
 
 import io.spring.sample.matchmaking.team.PlayerRank;
 import io.spring.sample.matchmaking.team.PlayerRegion;
@@ -9,8 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
-import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.boot.restclient.RestTemplateBuilder;
+import org.springframework.boot.restclient.test.autoconfigure.RestClientTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.http.HttpHeadersAssert;
@@ -70,8 +69,8 @@ class PlayerApiClientTests {
 	public static RequestMatcher prepareRequest(String path) {
 		return (request) -> {
 			assertThat(request.getURI()).hasPath(path);
-			new HttpHeadersAssert(request.getHeaders()).containsEntry(HttpHeaders.ACCEPT,
-					List.of(MediaType.APPLICATION_JSON_VALUE));
+			new HttpHeadersAssert(request.getHeaders()).hasSingleValue(HttpHeaders.ACCEPT,
+					MediaType.APPLICATION_JSON_VALUE);
 		};
 	}
 

@@ -1,0 +1,58 @@
+= Matchmaking - a Spring Boot 4.0 demo
+
+== Running the application
+You need Java 25 and Docker Compose.
+
+Start the OpenTelemetry backend with the usual command:
+
+[source,shell]
+----
+$ docker compose up -d
+----
+
+You then need to start the player backend any way you fancy.
+The easiest is as follows:
+
+[source,shell]
+----
+$ ./gradlew :playerprofile:bootRun
+----
+
+Of, if you prefer to use Maven:
+
+[source,shell]
+----
+$ ./mvnw -pl playerprofile spring-boot:run
+----
+
+Finally, the main `matchmaking` application can be started.
+You can do so in your IDE (run `io.spring.sample.matchmaking.Application`) or using the command-line as follows:
+
+[source,shell]
+----
+$ ./gradlew :matchmaking:bootRun
+----
+
+Or, again, if you prefer Maven:
+
+[source,shell]
+----
+$ ./mvnw -pl matchmaking spring-boot:run
+----
+
+You can then open `http://localhost:8080`.
+
+== Using the application
+
+A number of scripts are available.
+You can queue players to start seeing them on the home page as follows:
+
+[source,shell]
+----
+$ ./queue.sh 50
+----
+
+See `requests.http` for more query you can run against the service.
+
+To see what's exported to the OpenTelemetry backend, browse to `http://localhost:3000`.
+The default credentials are `admin`/ `admin`.

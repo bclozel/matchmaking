@@ -1,11 +1,9 @@
 package io.spring.sample.matchmaking.lobby;
 
 import org.springframework.http.MediaType;
-import org.springframework.resilience.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.web.client.RestClient;
-import org.springframework.web.client.RestClientException;
 
 @Component
 class PlayerApiClient {
@@ -29,7 +27,6 @@ class PlayerApiClient {
 		return profile;
 	}
 
-	@Retryable(includes = RestClientException.class, delayString = "300ms", multiplier = 1.5)
 	PlayerStats fetchPlayerStats(String playerId) {
 		PlayerStats stats = playerStatsClient.get()
 			.uri("/stats/{playerId}", playerId)

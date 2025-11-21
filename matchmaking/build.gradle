@@ -26,7 +26,6 @@ dependencies {
 	errorprone("com.uber.nullaway:nullaway:0.12.12")
 
 	implementation 'org.springframework.boot:spring-boot-starter-mustache'
-	implementation 'org.springframework.boot:spring-boot-starter-opentelemetry'
 	implementation 'org.springframework.boot:spring-boot-starter-restclient'
 	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
 

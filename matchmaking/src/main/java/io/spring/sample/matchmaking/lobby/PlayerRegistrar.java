@@ -9,6 +9,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.atomic.AtomicReference;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import io.spring.sample.matchmaking.team.PlayerRegion;
 import io.spring.sample.matchmaking.team.Team;
 import io.spring.sample.matchmaking.team.TeamMember;
@@ -35,10 +36,11 @@ public class PlayerRegistrar implements ApplicationEventPublisherAware {
 	@SuppressWarnings("NullAway.Init")
 	private ApplicationEventPublisher eventPublisher;
 
-	PlayerRegistrar(PlayerApiClient playerApiClient, LobbyProperties properties) {
+	PlayerRegistrar(PlayerApiClient playerApiClient, LobbyProperties properties, MeterRegistry meterRegistry) {
 		this.playerApiClient = playerApiClient;
 		this.lobbySize = properties.getTeamsPerLobby();
 		this.teamSize = properties.getPlayersPerTeam();
+		meterRegistry.gauge("matchmaking.queue.size", this.matchMakingQueue, queue -> queue.size());
 	}
 
 	@Override

@@ -10,6 +10,8 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.observation.annotation.ObservationKeyValue;
+import io.micrometer.observation.annotation.Observed;
 import io.spring.sample.matchmaking.team.PlayerRegion;
 import io.spring.sample.matchmaking.team.Team;
 import io.spring.sample.matchmaking.team.TeamMember;
@@ -48,7 +50,8 @@ public class PlayerRegistrar implements ApplicationEventPublisherAware {
 		this.eventPublisher = applicationEventPublisher;
 	}
 
-	public void queuePlayer(String playerId) {
+	@Observed(name="matchmaking.player.queue")
+	public void queuePlayer(@ObservationKeyValue(key = "player.id") String playerId) {
 		PlayerProfile profile = this.playerApiClient.getPlayerProfile(playerId);
 		PlayerStats stats = this.playerApiClient.fetchPlayerStats(playerId);
 		this.matchMakingQueue.addLast(new QueuingPlayer(profile, stats, Instant.now()));
